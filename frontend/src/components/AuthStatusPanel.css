@@ -1,0 +1,293 @@
+/* Authentication Status Panel Styles */
+
+.auth-status-panel {
+  width: 350px;
+  background: #252526;
+  border-left: 1px solid #3e3e42;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.exam-indicator {
+  padding: 4px 8px;
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #2d2d30;
+  margin: 16px;
+  border-radius: 8px;
+}
+
+.status-icon {
+  font-size: 36px;
+}
+
+.icon-success {
+  color: #27ae60;
+}
+
+.icon-danger {
+  color: #e74c3c;
+}
+
+.icon-neutral {
+  color: #95a5a6;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.status-label {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-bottom: 4px;
+}
+
+.status-value {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.status-value.success {
+  color: #27ae60;
+}
+
+.status-value.danger {
+  color: #e74c3c;
+}
+
+.metric-card {
+  padding: 16px;
+  margin: 0 16px 12px 16px;
+  background: #2d2d30;
+  border-radius: 6px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.metric-subtitle {
+  font-size: 11px;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+
+.risk-score-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.risk-score-bar {
+  flex: 1;
+  height: 8px;
+  background: #1e1e1e;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.risk-score-fill {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.risk-score-value {
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: right;
+}
+
+.alert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.alert-badge.alert-low {
+  background: rgba(39, 174, 96, 0.2);
+  color: #27ae60;
+}
+
+.alert-badge.alert-medium {
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+}
+
+.alert-badge.alert-high {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+.risk-indicator {
+  padding: 16px;
+  margin: 0 16px 12px 16px;
+  background: #2d2d30;
+  border-radius: 6px;
+}
+
+.risk-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.risk-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: all 0.2s;
+}
+
+.risk-level.active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.risk-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.alerts-section {
+  margin: 16px;
+  padding: 16px;
+  background: #2d2d30;
+  border-radius: 6px;
+}
+
+.alerts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.clear-button {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid #3e3e42;
+  color: #a0a0a0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s;
+}
+
+.clear-button:hover {
+  background: #3e3e42;
+  color: white;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alert-item {
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  border-left: 3px solid;
+}
+
+.alert-item.alert-high {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: #e74c3c;
+}
+
+.alert-item.alert-medium {
+  background: rgba(243, 156, 18, 0.1);
+  border-color: #f39c12;
+}
+
+.alert-item.alert-low {
+  background: rgba(39, 174, 96, 0.1);
+  border-color: #27ae60;
+}
+
+.alert-item.alert-info {
+  background: rgba(52, 152, 219, 0.1);
+  border-color: #3498db;
+}
+
+.alert-time {
+  color: #7f8c8d;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.alert-message {
+  color: #d4d4d4;
+  margin-bottom: 4px;
+}
+
+.alert-risk {
+  color: #a0a0a0;
+  font-size: 11px;
+}
+
+.info-panel {
+  margin: 16px;
+  padding: 16px;
+  background: rgba(52, 152, 219, 0.1);
+  border-left: 3px solid #3498db;
+  border-radius: 4px;
+}
+
+.info-icon {
+  color: #3498db;
+  margin-bottom: 8px;
+}
+
+.info-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #a0a0a0;
+  margin: 0;
+}

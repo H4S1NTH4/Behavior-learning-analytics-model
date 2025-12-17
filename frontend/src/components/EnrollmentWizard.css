@@ -1,0 +1,282 @@
+/* Enrollment Wizard Styles */
+
+.enrollment-wizard {
+  min-height: 100vh;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 40px;
+}
+
+.wizard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.wizard-header h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 28px;
+  margin: 0 0 12px 0;
+  color: #3498db;
+}
+
+.wizard-header p {
+  color: #a0a0a0;
+  font-size: 16px;
+}
+
+.wizard-steps {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+.step.completed {
+  opacity: 0.8;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2d2d30;
+  border: 2px solid #3e3e42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.step.active .step-number {
+  background: #3498db;
+  border-color: #3498db;
+  color: white;
+}
+
+.step.completed .step-number {
+  background: #27ae60;
+  border-color: #27ae60;
+  color: white;
+}
+
+.step-title {
+  font-size: 13px;
+  color: #a0a0a0;
+}
+
+.wizard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #252526;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.exercise-info {
+  margin-bottom: 24px;
+}
+
+.exercise-info h3 {
+  font-size: 22px;
+  margin: 0 0 8px 0;
+  color: #3498db;
+}
+
+.exercise-info > p {
+  color: #a0a0a0;
+  margin: 0 0 20px 0;
+}
+
+.progress-container {
+  margin-top: 20px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #a0a0a0;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #1e1e1e;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.3s ease-out;
+}
+
+.exercise-editor {
+  margin: 24px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #3e3e42;
+}
+
+.wizard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.control-info {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+
+.success-text {
+  color: #27ae60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.info-text {
+  color: #7f8c8d;
+}
+
+.button-primary,
+.button-secondary,
+.retry-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-primary {
+  background: #3498db;
+  color: white;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-secondary {
+  background: #2d2d30;
+  color: #d4d4d4;
+  border: 1px solid #3e3e42;
+}
+
+.button-secondary:hover {
+  background: #3e3e42;
+}
+
+.wizard-footer {
+  max-width: 900px;
+  margin: 30px auto 0;
+  padding: 20px;
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #3498db;
+}
+
+.wizard-footer p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #a0a0a0;
+}
+
+.wizard-footer p:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-note {
+  font-size: 13px !important;
+  color: #7f8c8d !important;
+}
+
+.enrollment-complete {
+  max-width: 600px;
+  margin: 100px auto;
+  text-align: center;
+  background: #252526;
+  padding: 60px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.success-icon {
+  font-size: 80px;
+  color: #27ae60;
+  margin-bottom: 24px;
+}
+
+.error-icon {
+  font-size: 80px;
+  color: #e74c3c;
+  margin-bottom: 24px;
+}
+
+.enrollment-complete h2 {
+  font-size: 28px;
+  margin: 0 0 16px 0;
+  color: #d4d4d4;
+}
+
+.enrollment-complete > p {
+  font-size: 16px;
+  color: #a0a0a0;
+  margin: 0 0 24px 0;
+}
+
+.enrollment-details {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 24px;
+}
+
+.enrollment-details p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.retry-button {
+  background: #3498db;
+  color: white;
+  margin-top: 24px;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+}

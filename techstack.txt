@@ -1,0 +1,9 @@
+Component,Technology,Role & Justification
+Frontend Framework,React.js,Manages complex IDE state and high-frequency DOM updates required for session replay.
+IDE Engine,Microsoft Monaco,"Provides native hooks (onKeyUp, onPaste) for granular telemetry capture."
+Backend API,Python (FastAPI),High-performance asynchronous handling of WebSocket connections for continuous data streaming.
+Message Broker,Redis Streams,Buffers high-velocity event data to prevent bottlenecks during concurrent student sessions.
+Primary Database,TimescaleDB,"SQL-based time-series engine for storing sequential behavioral data (keystroke timing, mouse paths)."
+Secondary Database,PostgreSQL,"Stores relational data: user profiles, courses, LMS mapping, and aggregated analytics."
+AI Inference,PyTorch / ONNX,Runs LSTM models for real-time struggle detection and behavioral biometrics.
+Infrastructure,Docker,"Containerization for secure, sandboxed code execution and service isolation."

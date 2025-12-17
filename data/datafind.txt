@@ -1,0 +1,8 @@
+The Blackbox Dataset (BlueJ): This is the gold standard for this specific problem. It contains over 100 million compilation events and source code edits from novice programmers using the BlueJ I
+
+Code.org & CodeParrot Datasets: These contain thousands of Python/Java programming problems and solutions.Use it for: Training a model to recognize "correct" code structure vs. "incorrect" structure (the CNN part of a hybrid model)
+
+KeyRecs Dataset (Zenodo): A modern dataset with fixed-text and free-text typing samples from 100+ users.
+
+Clarkson University Keystroke Dataset: A classic benchmark containing keystroke timing data (dwell/flight times).
+
