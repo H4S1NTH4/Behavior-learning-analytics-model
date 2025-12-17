@@ -180,6 +180,9 @@ async def enroll_user(request: EnrollmentRequest):
         # Enroll user
         result = authenticator.enroll_user(user_id, sequences)
 
+        # Save to disk immediately (persistence for new enrollments)
+        authenticator.save_model(trained_model_path, trained_template_path)
+
         return {
             "success": True,
             "user_id": user_id,
@@ -409,4 +412,4 @@ async def websocket_monitor(websocket: WebSocket, user_id: str, session_id: str)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8002)
