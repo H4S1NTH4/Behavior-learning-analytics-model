@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
 
 class AuthService {
   constructor() {
@@ -149,7 +149,7 @@ class AuthService {
    * Create WebSocket connection for real-time monitoring
    */
   createWebSocket(userId, sessionId, onMessage, onError) {
-    const wsUrl = `ws://localhost:8001/ws/monitor/${userId}/${sessionId}`;
+    const wsUrl = `ws://localhost:8002/ws/monitor/${userId}/${sessionId}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {

@@ -67,7 +67,7 @@ class KeystrokeAuthenticator:
     """
 
     def __init__(self, model_path: str = None):
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cpu')
         self.model = KeystrokeLSTM().to(self.device)
 
         if model_path:
