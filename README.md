@@ -72,7 +72,7 @@ Expected output:
 
 ```bash
 python backend/api.py
-```
+```s
 
 API will be available at: `http://localhost:8000`
 API docs at: `http://localhost:8000/docs`
