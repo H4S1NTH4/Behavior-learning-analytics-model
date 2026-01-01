@@ -193,18 +193,16 @@ Monaco Editor hooks capture:
 
 ### 2. **Feature Extraction** (Backend)
 
-From raw keystroke events, we extract:
+To match research standards, we extract these 6 values for every keystroke event ($N$) in relation to the next keystroke ($N+1$):
 
-**Static Features:**
-- Mean, std, median of dwell times
-- Mean, std, median of flight times
-- Typing speed (chars/second)
-- Error rate (backspace frequency)
+1. **Hold Time (HL)**: Duration the key is pressed down.
+2. **Flight Time (IL/UD)**: Time between releasing Key $N$ and pressing Key $N+1$.
+3. **Press-to-Press (PL/DD)**: Time between pressing Key $N$ and pressing Key $N+1$. This is the standard measure of typing speed.
+4. **Release-to-Release (RL/UU)**: Time between releasing Key $N$ and releasing Key $N+1$. This captures finger coordination.
+5. **Press-to-Release (Duration)**: Time from pressing Key $N$ to releasing Key $N+1$. This captures "rollover" behavior.
+6. **Key Code**: The numerical representation of the key itself.
 
-**Dynamic Features:**
-- Digraph timing (two-key sequences like "th", "er")
-- Pause patterns
-- Special key usage
+From these raw sequences, we also derive static features like mean/std of timings and error rates.
 
 ### 3. **LSTM Model**
 
