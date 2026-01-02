@@ -3,9 +3,8 @@
  * Guides users through the keystroke authentication enrollment process
  */
 
-import React, { useState, useEffect } from 'react';
-import Editor from '@monaco-editor/react';
-import { useKeystrokeCapture } from '../hooks/useKeystrokeCapture';
+import { useState } from 'react';
+import TypingTest from './TypingTest';
 import authService from '../services/authService';
 import { FaCheckCircle, FaKeyboard, FaUserCheck } from 'react-icons/fa';
 import './EnrollmentWizard.css';
@@ -14,37 +13,95 @@ const ENROLLMENT_EXERCISES = [
   {
     id: 1,
     title: 'Hello World',
-    description: 'Type a simple Python program',
-    template: '# Write a Hello World program\n',
+    description: 'Type the following Python program exactly as shown',
+    template: `def greet(name):
+    """Return a greeting message."""
+    return f"Hello, {name}! Welcome to Python."
+
+# Main execution
+if __name__ == "__main__":
+    user_name = input("Enter your name: ")
+    message = greet(user_name)
+    print(message)`,
     minKeystrokes: 50,
   },
   {
     id: 2,
     title: 'Function Definition',
-    description: 'Create a function that adds two numbers',
-    template: '# Define a function called add_numbers\n',
+    description: 'Type this function that performs mathematical operations',
+    template: `def calculate_average(numbers):
+    """Calculate the average of a list of numbers."""
+    if not numbers:
+        return 0
+
+    total = sum(numbers)
+    count = len(numbers)
+    average = total / count
+
+    return round(average, 2)
+
+# Example usage
+scores = [85, 92, 78, 90, 88]
+result = calculate_average(scores)
+print(f"Average score: {result}")`,
     minKeystrokes: 50,
   },
   {
     id: 3,
     title: 'Loop Practice',
-    description: 'Write a for loop that prints numbers 1 to 10',
-    template: '# Write a for loop\n',
+    description: 'Type this code that demonstrates loops and conditionals',
+    template: `def find_even_numbers(start, end):
+    """Find all even numbers in a given range."""
+    even_nums = []
+
+    for num in range(start, end + 1):
+        if num % 2 == 0:
+            even_nums.append(num)
+
+    return even_nums
+
+# Test the function
+numbers = find_even_numbers(1, 20)
+print(f"Even numbers: {numbers}")
+print(f"Count: {len(numbers)}")`,
     minKeystrokes: 50,
   },
   {
     id: 4,
-    title: 'Free Typing',
-    description: 'Type any code you like for at least 30 seconds',
-    template: '# Write any Python code\n',
+    title: 'Class Definition',
+    description: 'Type this class implementation with methods',
+    template: `class Student:
+    """Represents a student with name and grades."""
+
+    def __init__(self, name, student_id):
+        self.name = name
+        self.student_id = student_id
+        self.grades = []
+
+    def add_grade(self, grade):
+        """Add a grade to the student's record."""
+        if 0 <= grade <= 100:
+            self.grades.append(grade)
+            return True
+        return False
+
+    def get_average(self):
+        """Calculate the student's average grade."""
+        if not self.grades:
+            return 0
+        return sum(self.grades) / len(self.grades)
+
+# Create student instance
+student = Student("Alice", "S12345")
+student.add_grade(95)
+student.add_grade(88)
+print(f"{student.name}'s average: {student.get_average():.2f}")`,
     minKeystrokes: 100,
   },
 ];
 
 const EnrollmentWizard = ({ userId, onEnrollmentComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [editor, setEditor] = useState(null);
-  const [code, setCode] = useState(ENROLLMENT_EXERCISES[0].template);
   const [keystrokeData, setKeystrokeData] = useState([]);
   const [exerciseProgress, setExerciseProgress] = useState(
     ENROLLMENT_EXERCISES.map(() => ({ completed: false, keystrokes: 0 }))
@@ -54,31 +111,24 @@ const EnrollmentWizard = ({ userId, onEnrollmentComplete }) => {
 
   const sessionId = `enrollment_${Date.now()}`;
 
-  // Handle keystroke capture
-  const handleKeystrokeData = (batch) => {
-    setKeystrokeData((prev) => [...prev, ...batch]);
+  // Handle individual keystroke events
+  const handleKeystroke = (keystrokeEvent) => {
+    setKeystrokeData((prev) => [...prev, keystrokeEvent]);
 
     // Update progress for current exercise
     setExerciseProgress((prev) => {
       const newProgress = [...prev];
       newProgress[currentStep] = {
         ...newProgress[currentStep],
-        keystrokes: prev[currentStep].keystrokes + batch.length,
+        keystrokes: prev[currentStep].keystrokes + 1,
       };
       return newProgress;
     });
   };
 
-  // Use keystroke capture hook
-  useKeystrokeCapture(editor, userId, sessionId, handleKeystrokeData);
-
-  const handleEditorMount = (editor) => {
-    setEditor(editor);
-    editor.focus();
-  };
-
-  const handleEditorChange = (value) => {
-    setCode(value);
+  const handleExerciseComplete = () => {
+    // Exercise completed, do nothing - user will click Next
+    console.log('Exercise completed');
   };
 
   const currentExercise = ENROLLMENT_EXERCISES[currentStep];
@@ -96,7 +146,6 @@ const EnrollmentWizard = ({ userId, onEnrollmentComplete }) => {
 
       // Move to next exercise
       setCurrentStep(currentStep + 1);
-      setCode(ENROLLMENT_EXERCISES[currentStep + 1].template);
     } else {
       // All exercises complete, proceed to enrollment
       handleEnrollment();
@@ -231,21 +280,15 @@ const EnrollmentWizard = ({ userId, onEnrollmentComplete }) => {
           </div>
         </div>
 
-        {/* Code Editor */}
+        {/* Typing Test */}
         <div className="exercise-editor">
-          <Editor
-            height="400px"
-            defaultLanguage="python"
-            value={code}
-            onChange={handleEditorChange}
-            onMount={handleEditorMount}
-            theme="vs-dark"
-            options={{
-              fontSize: 14,
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
-              automaticLayout: true,
-            }}
+          <TypingTest
+            key={currentStep}
+            targetText={currentExercise.template}
+            onKeystroke={handleKeystroke}
+            onComplete={handleExerciseComplete}
+            userId={userId}
+            sessionId={sessionId}
           />
         </div>
 
@@ -255,7 +298,6 @@ const EnrollmentWizard = ({ userId, onEnrollmentComplete }) => {
             <button
               onClick={() => {
                 setCurrentStep(currentStep - 1);
-                setCode(ENROLLMENT_EXERCISES[currentStep - 1].template);
               }}
               className="button-secondary"
             >

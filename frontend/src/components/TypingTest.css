@@ -1,0 +1,189 @@
+/* Typing Test Styles */
+
+.typing-test-container {
+  width: 100%;
+}
+
+.typing-test-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #3e3e42;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.typing-test-display {
+  position: relative;
+  background: #1e1e1e;
+  border: 2px solid #3e3e42;
+  border-radius: 8px;
+  padding: 30px;
+  min-height: 300px;
+  cursor: text;
+  transition: border-color 0.3s;
+}
+
+.typing-test-display.focused {
+  border-color: #3498db;
+}
+
+.text-display {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 18px;
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+  white-space: pre;
+  word-wrap: break-word;
+  color: #7f8c8d;
+  user-select: none;
+  overflow-x: auto;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+.char {
+  position: relative;
+  transition: all 0.1s ease;
+}
+
+.char.correct {
+  color: #27ae60;
+}
+
+.char.error {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.2);
+  border-radius: 2px;
+}
+
+.char.current {
+  background-color: rgba(52, 152, 219, 0.3);
+  border-radius: 2px;
+  animation: blink 1s infinite;
+}
+
+.char.space {
+  display: inline-block;
+  min-width: 0.5ch;
+  position: relative;
+}
+
+/* Show subtle dot for all untyped spaces */
+.char.space:not(.correct):not(.error)::before {
+  content: '·';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #4a4a4a;
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+/* Highlight current space */
+.char.space.current::after {
+  content: '·';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #3498db;
+  font-weight: bold;
+  font-size: 20px;
+  animation: blink 1s infinite;
+}
+
+.char.newline {
+  color: #7f8c8d;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.char.newline.correct {
+  color: #27ae60;
+  opacity: 1;
+}
+
+.char.newline.error {
+  color: #e74c3c;
+  opacity: 1;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.3;
+  }
+}
+
+.focus-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.focus-overlay span {
+  color: #3498db;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 24px;
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid #3498db;
+  border-radius: 6px;
+}
+
+.typing-test-input {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.typing-test-hint {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(52, 152, 219, 0.1);
+  border-left: 3px solid #3498db;
+  border-radius: 4px;
+}
+
+.typing-test-hint p {
+  margin: 0;
+  font-size: 13px;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
