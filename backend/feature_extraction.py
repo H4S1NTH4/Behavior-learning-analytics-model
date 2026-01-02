@@ -150,6 +150,74 @@ class KeystrokeFeatureExtractor:
 
         return np.array(sequence, dtype=np.float32)
 
+    def create_typenet_sequence(self, keystroke_events: List[Dict], sequence_length: int = 70) -> np.ndarray:
+        """
+        Create a sequence for TypeNet model input
+        TypeNet requires 5 features: [HL, IL, PL, RL, KeyCode]
+
+        Features:
+        - HL (Hold Latency): Dwell time (key press to release)
+        - IL (Inter-key Latency): Flight time (previous release to current press)
+        - PL (Press Latency): Time from previous press to current press
+        - RL (Release Latency): Time from previous release to current release
+        - KeyCode: Numeric key code
+
+        Args:
+            keystroke_events: List of keystroke events with timestamp, dwellTime, flightTime, keyCode
+            sequence_length: Length of sequence (70 for TypeNet)
+
+        Returns:
+            np.ndarray of shape (sequence_length, 5)
+        """
+        # Pad or truncate to fixed length
+        if len(keystroke_events) > sequence_length:
+            events = keystroke_events[-sequence_length:]
+        else:
+            # Pad with last event if not enough data
+            if len(keystroke_events) > 0:
+                events = keystroke_events + [keystroke_events[-1]] * (sequence_length - len(keystroke_events))
+            else:
+                # If no events, create dummy data
+                dummy_event = {'dwellTime': 0, 'flightTime': 0, 'keyCode': 0, 'timestamp': 0}
+                events = [dummy_event] * sequence_length
+
+        sequence = []
+        for i, event in enumerate(events):
+            # HL: Hold Latency (dwell time)
+            hl = float(event.get('dwellTime', 0))
+
+            # IL: Inter-key Latency (flight time)
+            il = float(event.get('flightTime', 0))
+
+            # PL: Press Latency (time between key presses)
+            if i > 0:
+                pl = float(events[i]['timestamp'] - events[i-1]['timestamp'])
+            else:
+                pl = 0.0
+
+            # RL: Release Latency (time between key releases)
+            if i > 0:
+                prev_release = events[i-1]['timestamp'] + events[i-1].get('dwellTime', 0)
+                curr_release = events[i]['timestamp'] + events[i].get('dwellTime', 0)
+                rl = float(curr_release - prev_release)
+            else:
+                rl = 0.0
+
+            # KeyCode: Numeric representation of the key
+            keycode = float(event.get('keyCode', 0))
+
+            # Normalize timing features (convert to seconds for better scale)
+            features = [
+                hl / 1000.0,    # Convert ms to seconds
+                il / 1000.0,
+                pl / 1000.0,
+                rl / 1000.0,
+                keycode / 255.0  # Normalize keycode to 0-1 range
+            ]
+            sequence.append(features)
+
+        return np.array(sequence, dtype=np.float32)
+
     def _categorize_key(self, key: str) -> int:
         """Categorize keys into types (letters, numbers, special, etc.)"""
         if len(key) == 1:
