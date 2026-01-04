@@ -17,7 +17,7 @@ import asyncio
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from backend.feature_extraction import KeystrokeFeatureExtractor
-from models.keystroke_auth_model import KeystrokeAuthenticator
+from models.typenet_inference import TypeNetAuthenticator
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -37,22 +37,27 @@ app.add_middleware(
 
 # Global instances
 feature_extractor = KeystrokeFeatureExtractor()
-authenticator = KeystrokeAuthenticator()
 
-# Auto-load trained model if available
-trained_model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'trained_keystroke_model.pth')
-trained_template_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'trained_templates.pkl')
+# TypeNet model path
+typenet_model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'typenet_pretrained.pth')
+typenet_template_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'user_templates.pkl')
 
-if os.path.exists(trained_model_path) and os.path.exists(trained_template_path):
+# Initialize TypeNet authenticator
+authenticator = TypeNetAuthenticator(
+    model_path=typenet_model_path if os.path.exists(typenet_model_path) else None,
+    device='cpu'  # Change to 'cuda' if GPU available
+)
+
+# Load user templates if available
+if os.path.exists(typenet_template_path):
     try:
-        authenticator.load_model(trained_model_path, trained_template_path)
-        print("✅ Loaded trained model from:", trained_model_path)
+        authenticator.load_templates(typenet_template_path)
+        print(f"✅ Loaded {len(authenticator.user_templates)} user templates from TypeNet")
     except Exception as e:
-        print(f"⚠️  Failed to load trained model: {e}")
-        print("   Using untrained model instead.")
+        print(f"⚠️  Failed to load user templates: {e}")
 else:
-    print("ℹ️  No trained model found. Using untrained model.")
-    print("   To train: python train_model.py")
+    print("ℹ️  No user templates found. Users need to be enrolled.")
+    print("   Use /api/auth/enroll endpoint to enroll users.")
 
 # In-memory session storage (use Redis in production)
 active_sessions = {}
@@ -156,19 +161,19 @@ async def enroll_user(request: EnrollmentRequest):
         user_id = request.userId
         all_events = request.keystrokeEvents
 
-        if len(all_events) < 100:  # Minimum data for reliable enrollment
+        if len(all_events) < 150:  # Minimum data for reliable enrollment (at least 2 sequences of 70)
             raise HTTPException(
                 status_code=400,
-                detail="Insufficient data for enrollment. Please provide at least 100 keystroke events."
+                detail="Insufficient data for enrollment. Please provide at least 150 keystroke events."
             )
 
-        # Split events into sequences
-        sequence_length = 50
+        # Split events into sequences for TypeNet (70 keystrokes each)
+        sequence_length = 70
         sequences = []
 
         for i in range(0, len(all_events) - sequence_length, sequence_length // 2):  # 50% overlap
             sequence_events = all_events[i:i + sequence_length]
-            sequence = feature_extractor.create_sequence(sequence_events, sequence_length)
+            sequence = feature_extractor.create_typenet_sequence(sequence_events, sequence_length)
             sequences.append(sequence)
 
         if len(sequences) < 3:
@@ -180,8 +185,8 @@ async def enroll_user(request: EnrollmentRequest):
         # Enroll user
         result = authenticator.enroll_user(user_id, sequences)
 
-        # Save to disk immediately (persistence for new enrollments)
-        authenticator.save_model(trained_model_path, trained_template_path)
+        # Save templates to disk immediately (persistence for new enrollments)
+        authenticator.save_templates(typenet_template_path)
 
         return {
             "success": True,
@@ -208,14 +213,14 @@ async def verify_user(request: VerificationRequest):
         events = request.keystrokeEvents
         threshold = request.threshold
 
-        if len(events) < 50:
+        if len(events) < 70:
             raise HTTPException(
                 status_code=400,
-                detail="Insufficient data for verification. Need at least 50 keystrokes."
+                detail="Insufficient data for verification. Need at least 70 keystrokes."
             )
 
-        # Create sequence
-        sequence = feature_extractor.create_sequence(events, sequence_length=50)
+        # Create sequence for TypeNet
+        sequence = feature_extractor.create_typenet_sequence(events, sequence_length=70)
 
         # Verify
         result = authenticator.verify_user(user_id, sequence, threshold)
@@ -246,14 +251,14 @@ async def identify_user(request: IdentificationRequest):
             )
 
         # Validate minimum keystroke count
-        if len(events) < 100:
+        if len(events) < 70:
             raise HTTPException(
                 status_code=400,
-                detail=f"Insufficient data for reliable identification. Need at least 100 keystrokes. Got: {len(events)}"
+                detail=f"Insufficient data for reliable identification. Need at least 70 keystrokes. Got: {len(events)}"
             )
 
-        # Create sequence from events
-        sequence = feature_extractor.create_sequence(events, sequence_length=50)
+        # Create sequence from events for TypeNet
+        sequence = feature_extractor.create_typenet_sequence(events, sequence_length=70)
 
         # Identify user
         result = authenticator.identify_user(sequence, top_k)
@@ -283,23 +288,23 @@ async def monitor_session(request: MonitoringRequest):
         session_data = active_sessions[session_key]
         events = session_data['events']
 
-        if len(events) < 100:
+        if len(events) < 150:
             return {
                 "success": True,
                 "status": "COLLECTING_DATA",
-                "message": f"Collecting baseline data. {len(events)}/100 events captured.",
+                "message": f"Collecting baseline data. {len(events)}/150 events captured.",
                 "risk_score": 0.0
             }
 
-        # Create multiple sequences from recent data
-        sequence_length = 50
+        # Create multiple sequences from recent data for TypeNet
+        sequence_length = 70
         sequences = []
 
         for i in range(len(events) - sequence_length, 0, -sequence_length):
             if i < 0:
                 break
             sequence_events = events[i:i + sequence_length]
-            sequence = feature_extractor.create_sequence(sequence_events, sequence_length)
+            sequence = feature_extractor.create_typenet_sequence(sequence_events, sequence_length)
             sequences.append(sequence)
 
             if len(sequences) >= 5:  # Analyze last 5 sequences

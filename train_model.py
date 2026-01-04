@@ -140,7 +140,8 @@ def create_triplet_batches(training_pairs, batch_size=32):
             if len(user_ids) > 1:
                 other_users = [u for u in user_ids if u != user_id]
                 neg_user = np.random.choice(other_users)
-                negative_seq = np.random.choice(user_samples[neg_user])
+                neg_idx = np.random.randint(0, len(user_samples[neg_user]))
+                negative_seq = user_samples[neg_user][neg_idx]
 
                 # Add triplet
                 triplet_data.append((anchor_seq, user_id))
